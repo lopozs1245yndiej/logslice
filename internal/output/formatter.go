@@ -53,6 +53,16 @@ func (f *Formatter) Write(entry map[string]interface{}) error {
 	}
 }
 
+// WriteAll formats and writes multiple log entries, stopping on first error.
+func (f *Formatter) WriteAll(entries []map[string]interface{}) error {
+	for _, entry := range entries {
+		if err := f.Write(entry); err != nil {
+			return fmt.Errorf("output: failed to write entry: %w", err)
+		}
+	}
+	return nil
+}
+
 func (f *Formatter) writeJSON(entry map[string]interface{}) error {
 	b, err := json.Marshal(entry)
 	if err != nil {
